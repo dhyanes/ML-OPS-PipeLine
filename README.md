@@ -17,3 +17,23 @@ End-to-end ML pipeline with CI/CD and Kubernetes deployment.
 
 ## Architecture
 
+## RUn Prometheus (Docker )
+
+docker run -d \
+  -p 9090:9090 \
+  -v $(pwd)/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus
+
+## graffana Setup
+
+docker run -d -p 3000:3000 grafana/grafana
+
+👉 Login:
+
+user: admin
+password: admin
+
+👉 Add Data Source:
+
+URL: http://prometheus:9090
+
