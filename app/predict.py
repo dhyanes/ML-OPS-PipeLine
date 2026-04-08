@@ -1,18 +1,14 @@
-import pandas as pd
-from sklearn.linear_model import LogisticRegression
-import joblib
+from flask import Flask, request, jsonify
+import mlflow.pyfunc
 
-# Dummy dataset
-data = pd.DataFrame({
-    "x": [1, 2, 3, 4],
-    "y": [0, 0, 1, 1]
-})
+app = Flask(__name__)
 
-X = data[["x"]]
-y = data["y"]
+model = mlflow.pyfunc.load_model("models:/mlops-experiment/1")
 
-model = LogisticRegression()
-model.fit(X, y)
+@app.route("/predict", methods=["POST"])
+def predict():
+    data = request.json
+    prediction = model.predict([[data["x"]]])
+    return jsonify({"prediction": int(prediction[0])})
 
-joblib.dump(model, "model/model.pkl")
-print("Model trained and saved!")
+app.run(host="0.0.0.0", port=5000)
