@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker build -t mlops-app .'
+            }
+        }
+        stage('Push') {
+            steps {
+                sh 'docker tag mlops-app your-dockerhub/mlops-app'
+                sh 'docker push your-dockerhub/mlops-app'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'kubectl apply -f k8s/'
+            }
+        }
+    }
+}
